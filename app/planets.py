@@ -59,5 +59,5 @@ planets = [
 
 planet_list = []
 for p in planets:
-    instant = Planet(p['id'], p['name'], p['description'], p['mass'])
-    planet_list.append(instant)
+    instance = Planet(p['id'], p['name'], p['description'], p['mass'])
+    planet_list.append(instance)

@@ -9,6 +9,7 @@ class Planet:
         self.description = description
         self.mass = mass
 
+
 planets = [
     {
         'id': 1,
@@ -60,19 +61,31 @@ planets = [
     }
 ]
 
-planet_list = [Planet(p['id'], p['name'], p['description'], p['mass']) for p in planets]
+planet_list = [Planet(p['id'], p['name'], p['description'], p['mass'])
+               for p in planets]
 
 planets_bp = Blueprint('planets_bp', __name__, url_prefix='/planets')
+
 
 @planets_bp.route('', methods=['GET'])
 def get_all_planets():
     return jsonify(planets)
 
+
 @planets_bp.route('/<id>', methods=['GET'])
+def validate_planet(id):
+    try:
+        id = int(id)
+    except ValueError:
+        return {"message": f"planet {id} invalid"}, 400
+
+    for planet in planet_list:
+        if planet.id == id:
+            return vars(planet)
+
+        return {"message": f"planet {id} not found"}, 404
+
+
 def get_one_planet(id):
-    # for planet in planet_list:
-    #     if planet.id == int(id):
-    #         return vars(planet)
-    planet = next((planet for planet in planet_list if planet.id == int(id)), None)
-                  
-    return vars(planet)
+    planet = validate_planet(id)
+    return planet

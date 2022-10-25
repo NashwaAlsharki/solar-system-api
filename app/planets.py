@@ -67,14 +67,4 @@ planets_bp = Blueprint('planets_bp', __name__, url_prefix='/planets')
 @planets_bp.route('', methods=['GET'])
 def get_all_planets():
     return jsonify(planets)
-
-@planets_bp.route('/<id>', methods=['GET'])
-def get_one_planet(id):
-    # for planet in planet_list:
-    #     if planet.id == int(id):
-    #         return vars(planet)
     
-    error_message = {"message": "Invalid id"}, 400
-    planet = next((planet for planet in planet_list if planet.id == int(id)), None)
-                  
-    return vars(planet) if planet != None else error_message

@@ -73,6 +73,8 @@ def get_one_planet(id):
     # for planet in planet_list:
     #     if planet.id == int(id):
     #         return vars(planet)
+    
+    error_message = {"message": "Invalid id"}, 400
     planet = next((planet for planet in planet_list if planet.id == int(id)), None)
                   
-    return vars(planet)
+    return vars(planet) if planet != None else error_message

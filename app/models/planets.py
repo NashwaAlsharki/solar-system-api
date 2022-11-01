@@ -18,12 +18,12 @@ class Planet(db.Model):
 
 
 # planets = [
-#     {
-#         'id': 1,
-#         'name': 'Mercury',
-#         'description': 'Smallest planet',
-#         'mass': '3.301×1023 kg'
-#     },
+    # {
+    #     'id': 1,
+    #     'name': 'Mercury',
+    #     'description': 'Smallest planet',
+    #     'mass': '3.301×1023 kg'
+    # },
 #     {
 #         'id': 2,
 #         'name': 'Venus',
@@ -70,6 +70,7 @@ class Planet(db.Model):
 
 # planet_list = [Planet(p['id'], p['name'], p['description'], p['mass'])
 #                for p in planets]
+
 
 planets_bp = Blueprint('planets_bp', __name__, url_prefix='/planets')
 

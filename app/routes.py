@@ -1,6 +1,6 @@
 from app import db
 from app.models.planets import Planet
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request, abort
 
 
 planets_bp = Blueprint("planets", __name__, url_prefix='/planets')
@@ -26,25 +26,44 @@ def get_all_planets():
         return make_response(f"Planet {new_planet.name} successfully created", 201)
 
 
-# @planets_bp.route('', methods=['GET'])
-# def get_all_planets():
-#      return jsonify(planets)
+def validate_planet(id):
+    try:
+        id = int(id)
+    except:
+        abort(make_response({'message': f'{id} is invalid'}, 400))
+    planet = Planet.query.get(id)
+    if not planet:
+        abort(make_response({"message": f"planet {id} not found"}, 404))
+    return planet
 
 
-# @planets_bp.route('/<id>', methods=['GET'])
-# def validate_planet(id):
-#     try:
-#         id = int(id)
-#     except ValueError:
-#         return {"message": f"planet {id} invalid"}, 400
-
-#     for planet in planet_list:
-#         if planet.id == id:
-#             return vars(planet)
-
-    return {"message": f"planet {id} not found"}, 404
+@planets_bp.route('/<id>', methods=['GET'])
+def get_one_planet(id):
+    planet = validate_planet(id)
+    return {"id": planet.id, "name": planet.name,
+            "description": planet.description, "mass": planet.mass}
 
 
-# def get_one_planet(id):
-#     planet = validate_planet(id)
-#     return planet
+@planets_bp.route('/<id>', methods=['PUT'])
+def update_planet(id):
+    planet = validate_planet(id)
+
+    request_body = request.get_json()
+
+    planet.name = request_body["name"]
+    planet.description = request_body["description"]
+    planet.mass = request_body["mass"]
+
+    db.session.commit()
+
+    return make_response(f"Planet #{planet.id} successfully updated")
+
+
+@planets_bp.route('/<id>', methods=['DELETE'])
+def delete_planet(id):
+    planet = validate_planet(id)
+
+    db.session.delete(planet)
+    db.session.commit()
+
+    return make_response(f'Planet #{id} successfully deleted')

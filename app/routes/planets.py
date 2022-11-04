@@ -1,5 +1,5 @@
 from app import db
-from app.models.planets import Planet
+from app.models.planet_model import Planet
 from flask import Blueprint, jsonify, make_response, request, abort
 
 
